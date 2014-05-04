@@ -15,7 +15,7 @@ std::condition_variable cv;
 int meal = 0;
 
 /* consumer */
-void customer(int ordernumber){
+void waiter(int ordernumber){
   std::unique_lock<std::mutex> lck(mtx);
   while(meal == 0) cv.wait(lck);
   std::cout << "Order: ";
@@ -25,27 +25,27 @@ void customer(int ordernumber){
 }
 
 /* Producer */
-void waiter(int ordernumber){
+void makeMeal(int ordernumber){
   std::unique_lock<std::mutex> lck(mtx);
   meal++;
   cv.notify_one();
 }
 
-int main (){
+int main(){
 
-  std::thread customers[10];
+  std::thread chefs[10];
   std::thread waiters[10];
 
   /* Initialize customers and cheifs */
   for (int order = 0; order < 10; order++){
-    customers[order] = std::thread(customer, order);
+    chefs[order] = std::thread(makeMeal, order);
     waiters[order] = std::thread(waiter, order);
   }
 
   /* Join the threads to the main threads */
   for (int order = 0; order < 10; order++) {
     waiters[order].join();   
-    customers[order].join(); 
+    chefs[order].join(); 
   }
 
   return 0;
