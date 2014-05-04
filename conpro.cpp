@@ -25,7 +25,7 @@ void customer(int ordernumber){
 }
 
 /* Producer */
-void chief(int ordernumber){
+void waiter(int ordernumber){
   std::unique_lock<std::mutex> lck(mtx);
   meal++;
   cv.notify_one();
@@ -34,18 +34,18 @@ void chief(int ordernumber){
 int main (){
 
   std::thread customers[10];
-  std::thread chiefs[10];
+  std::thread waiters[10];
 
   /* Initialize customers and cheifs */
   for (int order = 0; order < 10; order++){
-    customers[order] = std::thread(customer, order);   // spawn first
-    chiefs[order] = std::thread(chief, order); // spawn second
+    customers[order] = std::thread(customer, order);
+    waiters[order] = std::thread(waiter, order);
   }
 
   /* Join the threads to the main threads */
   for (int order = 0; order < 10; order++) {
-    chiefs[order].join();     // must be first
-    customers[order].join();  // must be second
+    waiters[order].join();   
+    customers[order].join(); 
   }
 
   return 0;
