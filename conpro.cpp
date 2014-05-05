@@ -1,7 +1,7 @@
 /**
  * Producer-Comsumer example, written in C++ May 4, 2014
  * Compiled on OSX 10.9, using:
- * g++ -std=c++11 semaphore.cpp
+ * g++ -std=c++11 conpro.cpp
  **/
 
 #include <iostream>           
